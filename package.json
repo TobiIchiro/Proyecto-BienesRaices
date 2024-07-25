@@ -1,0 +1,19 @@
+{
+  "name": "bienesraices",
+  "version": "1.0.0",
+  "description": "Proyecto node.js",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./index.js",
+    "server": "nodemon ./index.js"
+  },
+  "author": "Israel Toledo",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
