@@ -1,13 +1,10 @@
 import express from 'express';
+import { formularioLogin } from '../Controllers/userController.js';
+import { formularioRegister } from '../Controllers/userController.js';
 
 const router = express.Router();
 
-router.get('/', (req,res) => {
-    res.json({'msg':'Hola Mundo'})
-})
-
-router.get('/nosotros', (req, res) => {
-    res.json({'Encabezado':'Informacion de nosotros'})
-})
+router.get('/login', formularioLogin)
+router.get('/register', formularioRegister)
 
 export default router
