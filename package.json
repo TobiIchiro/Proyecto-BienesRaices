@@ -5,15 +5,17 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start" : "node ./index.js",
-    "server" : "nodemon ./index.js",
-    "css" : "postcss public/css/tailwind.css -o public/css/app.css --watch"
+    "start": "node ./index.js",
+    "server": "nodemon ./index.js",
+    "css": "postcss public/css/tailwind.css -o public/css/app.css --watch"
   },
   "author": "Israel Toledo",
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
-    "pug": "^3.0.3"
+    "mysql2": "^3.11.0",
+    "pug": "^3.0.3",
+    "sequelize": "^6.37.3"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
