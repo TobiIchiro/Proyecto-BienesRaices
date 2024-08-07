@@ -1,15 +1,24 @@
 
 const formularioLogin = (req,res) => {
     res.render('./auth/login.pug', {
+        pagina : "Iniciar sesión"
     })
 }
 
-const formularioRegister = (req,res) => {
-    res.render('./auth/register.pug', {
+const formularioSignin = (req,res) => {
+    res.render('./auth/signin.pug', {
+        pagina : 'Crear cuenta'
+    })
+}
+
+const forgotPassword = (req,res) => {
+    res.render('./auth/forgot-pass.pug', {
+        pagina : 'Recupera tu contraseña'
     })
 }
 
 export {
     formularioLogin,
-    formularioRegister
+    formularioSignin,
+    forgotPassword
 }
