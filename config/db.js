@@ -1,11 +1,13 @@
 import Sequelize from "sequelize"
+import dotnev from 'dotenv'
+dotnev.config({path: '.env'})
 
 const db = new Sequelize(
-    'bienesraices',
-    'root',
-    'root',
+    process.env.BD_NOMBRE,
+    process.env.BD_USER,
+    process.env.BD_PASSWORD,
     {
-        host: 'localhost',
+        host: process.env.BD_HOST,
         port: 3306,
         dialect: 'mysql',
         define: {
