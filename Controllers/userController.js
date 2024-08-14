@@ -1,6 +1,8 @@
 import { check, validationResult } from "express-validator"
 import Usuario from "../models/Usuario.js"
 import {generateId} from "../helpers/tokens.js"
+import { emailRegistro } from "../helpers/emails.js" 
+import { error } from "console"
 
 const formularioLogin = (req,res) => {
     res.render('./auth/login.pug', {
@@ -9,8 +11,10 @@ const formularioLogin = (req,res) => {
 }
 
 const formularioSignin = (req,res) => {
+    console.log(req.csrfToken())
     res.render('./auth/signin.pug', {
-        pagina : 'Crear cuenta'
+        pagina : 'Crear cuenta',
+        csrfToken : req.csrfToken()
     })
 }
 
@@ -27,6 +31,7 @@ const signin = async (req,res) => {
     {
         return res.render('auth/signin.pug', {
             pagina: 'Crear cuenta',
+            csrfToken : req.csrfToken(),
             errors: result.array(),
             usuario: {
                 name: req.body.name,
@@ -41,6 +46,7 @@ const signin = async (req,res) => {
     {
         return res.render('auth/signin.pug', {
             pagina: 'Crear cuenta',
+            csrfToken : req.csrfToken(),
             errors: [{msg: 'El usuario ya existe'}],
             usuario: {
                 name: req.body.name,
@@ -49,11 +55,18 @@ const signin = async (req,res) => {
         })
     }
 
-    await Usuario.create({
+    const usuario = await Usuario.create({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
         token: generateId()
+    })
+
+    //Enviar email de confirmacion
+    emailRegistro({
+        name: usuario.name,
+        email: usuario.email,
+        token: usuario.token
     })
 
     //Mostrar mensaje de confirmacion
@@ -65,6 +78,34 @@ const signin = async (req,res) => {
     )
 }
 
+const verify = async (req,res) => {
+    const {token} = req.params
+
+    //Verificar si el token es valido
+
+    const usuario = await Usuario.findOne({where: {token}})
+    console.log(usuario);
+    if(!usuario){
+        return res.render('auth/verify-account.pug',{
+        pagina: 'Error al verificar la cuenta',
+        mensaje: 'Hubo un error al verificar la cuenta, intenta de nuevo',
+        error: true
+        })
+    }
+
+    if(usuario)
+    {
+        usuario.token = null;
+        usuario.confirmado = true;
+        await usuario.save();
+        return res.render('auth/verify-account.pug',{
+            pagina: 'Cuenta verificada',
+            mensaje: 'Cuenta verificada exitosamente'
+            })
+    }
+    
+}
+    
 
 const forgotPassword = (req,res) => {
     res.render('./auth/forgot-pass.pug', {
@@ -76,5 +117,6 @@ export {
     formularioLogin,
     formularioSignin,
     signin,
+    verify,
     forgotPassword
 }
