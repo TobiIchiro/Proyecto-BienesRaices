@@ -1,8 +1,9 @@
 import { check, validationResult } from "express-validator"
+import bcrypt from 'bcrypt'
 import Usuario from "../models/Usuario.js"
 import {generateId} from "../helpers/tokens.js"
-import { emailRegistro } from "../helpers/emails.js" 
-import { error } from "console"
+import { emailRegistro, emailResetPassword } from "../helpers/emails.js" 
+
 
 const formularioLogin = (req,res) => {
     res.render('./auth/login.pug', {
@@ -11,7 +12,6 @@ const formularioLogin = (req,res) => {
 }
 
 const formularioSignin = (req,res) => {
-    console.log(req.csrfToken())
     res.render('./auth/signin.pug', {
         pagina : 'Crear cuenta',
         csrfToken : req.csrfToken()
@@ -109,8 +109,97 @@ const verify = async (req,res) => {
 
 const forgotPassword = (req,res) => {
     res.render('./auth/forgot-pass.pug', {
-        pagina : 'Recupera tu contraseña'
+        pagina : 'Recupera tu contraseña',
+        csrfToken : req.csrfToken()
     })
+}
+
+const resetPassword = async (req, res) => {
+    //Validacion
+    await check('email').isEmail().withMessage('Email inválido').run(req)
+    let result = validationResult(req)
+
+    //Vereficar que el resultado este vacio
+    if(!result.isEmpty())
+    {
+        return res.render('auth/forgot-pass.pug', {
+            pagina: 'Recupera tu contraseña',
+            csrfToken : req.csrfToken(),
+            errors: result.array()
+        })
+    }
+    // Verificar que el correo este registrado
+    const existEmail = await Usuario.findOne({ where : {email : req.body.email}})
+
+    if(!existEmail)
+    {
+        return res.render('auth/forgot-pass.pug', {
+            pagina: 'Recupera tu contraseña',
+            csrfToken: req.csrfToken(),
+            errors: [{msg : `El correo ${req.body.email} no está registrado`}]
+        })
+    }
+    const user = existEmail
+    user.token = generateId();
+    await user.save();
+
+    emailResetPassword({
+        email: user.email,
+        name: user.name,
+        token: user.token})
+
+    return res.render('auth/restart-msg.pug', {
+        pagina: 'Recupera tu contraseña',
+        //csrfToken : req.csrfToken(),
+        msg : `Se ha enviado un correo a ${req.body.email}\ncon las instrucciones para recuperar tu contraseña`
+    })
+}
+
+const verifyToken =  async (req, res) => {
+    const existsToken = await Usuario.findOne({ where : {token: req.params['token']}})
+    if(!existsToken)
+    {
+        return res.render('auth/restart-pass.pug', {
+            pagina: 'Reestablece tu contraseña',
+            csrfToken: req.csrfToken(),
+            errors: [{msg : `Token invalido`}],
+            invalid: true
+        })
+    }
+    if(existsToken)
+    {
+        res.render('auth/restart-pass.pug',{
+            pagina: 'Reestablece tu contraseña',
+            csrfToken: req.csrfToken()
+            })
+    }
+}
+
+const newPassword =  async (req, res) => {
+    await check('password').isLength({min: 6}).withMessage('La contraseña debe tener al menos 6 caracteres').run(req)
+    await check('repetir_password').equals(req.body.password).withMessage('Las contraseñas no son iguales').run(req)
+    let result = validationResult(req)
+    if(!result.isEmpty())
+    {
+        return res.render('auth/restart-pass.pug', {
+            pagina: 'Reestablece tu contraseña',
+            csrfToken : req.csrfToken(),
+            errors: result.array()
+        })
+    }
+    const usuario = await Usuario.findOne({ where : {token: req.params['token']}})
+    usuario.token = null;
+    usuario.password = req.body['password'];
+    const salt = await bcrypt.genSalt(10)
+    usuario.password = await bcrypt.hash(usuario.password, salt);
+    await usuario.save();
+    res.render('templates/message.pug',{
+        pagina: 'Contraseña reestablecida',
+        mensaje: 'Tu contraseña se ha reestablecido exitosamente',
+        csrfToken: req.csrfToken()
+        })
+    
+
 }
 
 export {
@@ -118,5 +207,8 @@ export {
     formularioSignin,
     signin,
     verify,
-    forgotPassword
+    forgotPassword,
+    resetPassword,
+    verifyToken,
+    newPassword
 }
