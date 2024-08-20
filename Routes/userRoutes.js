@@ -1,5 +1,6 @@
 import express from 'express';
-import { formularioLogin, 
+import { formularioLogin,
+         autenticateLogin, 
          formularioSignin,
          signin,
          verify,
@@ -12,6 +13,7 @@ import { formularioLogin,
 const router = express.Router();
 
 router.get('/login', formularioLogin)
+router.post('/login',autenticateLogin)
 
 router.get('/signin', formularioSignin)
 router.post('/signin', signin)

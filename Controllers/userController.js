@@ -1,14 +1,65 @@
 import { check, validationResult } from "express-validator"
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 import Usuario from "../models/Usuario.js"
-import {generateId} from "../helpers/tokens.js"
+import {generateId,
+    genereteJWT
+} from "../helpers/tokens.js"
 import { emailRegistro, emailResetPassword } from "../helpers/emails.js" 
 
 
 const formularioLogin = (req,res) => {
     res.render('./auth/login.pug', {
-        pagina : "Iniciar sesión"
+        pagina : "Iniciar sesión",
+        csrfToken : req.csrfToken()
     })
+}
+
+const autenticateLogin = async (req, res) => {
+    await check('email').isEmail().withMessage('Email necesario').run(req)
+    await check('password').notEmpty().withMessage('contraseña necesaria').run(req)
+    let result = validationResult(req)
+    
+    if(!result.isEmpty())
+    {
+        return res.render('auth/login.pug', {
+            pagina : "Iniciar sesión",
+            csrfToken : req.csrfToken(),
+            errors: result.array()
+        })
+    }
+    const existUser = await Usuario.findOne({ where : {email : req.body.email}})
+    if(!existUser)
+    {
+        return res.render('auth/login.pug', {
+            pagina : "Iniciar sesión",
+            csrfToken : req.csrfToken(),
+            errors: [{msg: "No existe un usuario con ese correo"}]
+        })
+    }
+    if(!existUser.confirmado)
+    {
+        return res.render('auth/login.pug', {
+            pagina : "Iniciar sesión",
+            csrfToken : req.csrfToken(),
+            errors: [{msg: "El usuario no está confirmado"}]
+        })
+    }
+    if(!existUser.verifyPassword(req.body.password))
+    {
+        return res.render('auth/login.pug', {
+            pagina : "Iniciar sesión",
+            csrfToken : req.csrfToken(),
+            errors: [{msg: "La contraseña es incorrecta"}]
+        })
+    }
+    const token = genereteJWT({id : existUser.id, name : existUser.name})
+    console.log(token)
+
+    return res.cookie('_token',token,{
+        httpOnly : true,
+        //secure : true
+    }).redirect('/my-properties')
 }
 
 const formularioSignin = (req,res) => {
@@ -204,6 +255,7 @@ const newPassword =  async (req, res) => {
 
 export {
     formularioLogin,
+    autenticateLogin,
     formularioSignin,
     signin,
     verify,
