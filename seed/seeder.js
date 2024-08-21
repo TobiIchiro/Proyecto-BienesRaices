@@ -1,7 +1,8 @@
 import categories from './categories.js'
 import prices from './prices.js'
+import users from './users.js'
 import db from '../config/db.js'
-import {Category, Price, Property} from '../models/index.js'
+import {Category, Price, Property, Usuario} from '../models/index.js'
 import { promises } from 'dns'
 import { truncate } from 'fs'
 
@@ -19,7 +20,11 @@ const importData = async () => {
         await Price.bulkCreate(prices)*/
 
         //Bases de datos independientes
-        await Promise.all([Category.bulkCreate(categories), Price.bulkCreate(prices)])
+        await Promise.all([
+            Category.bulkCreate(categories),
+            Price.bulkCreate(prices),
+            Usuario.bulkCreate(users)
+        ])
 
         console.log('Datos importados correctamente')
         process.exit()
