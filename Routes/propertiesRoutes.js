@@ -9,12 +9,17 @@ import {
 } from '../Controllers/propertiesController.js'
 
 import protectRoute from '../middleware/protectRoute.js';
+import upload from '../middleware/uploadImage.js'
 
 const router = express.Router();
 
-router.get('/my-properties',protectRoute, admin)
+router.get('/my-properties',
+    protectRoute,
+    admin)
 
-router.get('/my-properties/add',protectRoute, add)
+router.get('/my-properties/add',
+    protectRoute,
+    add)
 router.post('/my-properties/add',protectRoute,
     body('title').notEmpty().withMessage('Es necesario el título del anuncio'),
     body('description')
@@ -27,6 +32,10 @@ router.post('/my-properties/add',protectRoute,
     body('wc').isNumeric().withMessage('Selecciona un numero de baños'),
     body('lat').notEmpty().withMessage('Ubica la propiedad en el mapa'),
     save)
-router.get('/my-properties/add-image/:id', protectRoute, addImage)
-router.post('/my-properties/add-image/:id', protectRoute, addImage)
+
+router.get('/my-properties/add-image/:id',
+    protectRoute,
+    addImage)
+router.post('/my-properties/add-image/:id',
+    upload.array('images',5))
 export default router
