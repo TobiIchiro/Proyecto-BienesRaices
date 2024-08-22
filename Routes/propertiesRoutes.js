@@ -27,5 +27,6 @@ router.post('/my-properties/add',protectRoute,
     body('wc').isNumeric().withMessage('Selecciona un numero de baños'),
     body('lat').notEmpty().withMessage('Ubica la propiedad en el mapa'),
     save)
-router.get('/my-properties/add-image/:id',addImage)
+router.get('/my-properties/add-image/:id', protectRoute, addImage)
+router.post('/my-properties/add-image/:id', protectRoute, addImage)
 export default router

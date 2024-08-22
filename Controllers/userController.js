@@ -54,7 +54,6 @@ const autenticateLogin = async (req, res) => {
         })
     }
     const token = genereteJWT({id : existUser.id, name : existUser.name})
-    console.log(token)
 
     return res.cookie('_token',token,{
         httpOnly : true,
@@ -135,7 +134,7 @@ const verify = async (req,res) => {
     //Verificar si el token es valido
 
     const usuario = await Usuario.findOne({where: {token}})
-    console.log(usuario);
+    
     if(!usuario){
         return res.render('auth/verify-account.pug',{
         pagina: 'Error al verificar la cuenta',
