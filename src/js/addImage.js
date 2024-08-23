@@ -23,5 +23,10 @@ Dropzone.options.image = {
         btnPublish.addEventListener('click',function() {
             dropzone.processQueue()
         })
+        dropzone.on('queuecomplete',function() {
+            if(dropzone.getActiveFiles().length == 0) {
+                window.location.href = '/my-properties'
+            }
+        })
     }
 }

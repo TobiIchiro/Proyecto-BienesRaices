@@ -96,7 +96,7 @@ const addImage = async (req, res) => {
     })
 }
 
-const storeImage =  async (req, res) => {
+const storeImage =  async (req, res, next) => {
     const {id} = req.params
     //Validar que la propiedad exista
     const property = await Property.findByPk(id)
@@ -122,7 +122,8 @@ const storeImage =  async (req, res) => {
             
         //});
         //property.published = 1
-        //property.save()
+        //await property.save()
+        //next()
     }
     catch(error){
         console.log(error)
