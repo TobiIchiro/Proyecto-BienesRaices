@@ -1,3 +1,4 @@
+import {unlink} from 'node:fs/promises'
 import {validationResult} from 'express-validator'
 import {Price, Category, Property} from '../models/index.js'
 
@@ -244,6 +245,11 @@ const deleteProperty = async (req, res) => {
         return res.redirect('/my-properties')
     }
     
+    if(property.name)
+        await unlink(`public/uploads/${property.imagen}`)
+
+    await property.destroy()
+    res.redirect('/my-properties')
     
 }
 
