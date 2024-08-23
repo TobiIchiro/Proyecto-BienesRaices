@@ -10,7 +10,8 @@ const admin = async (req,res) => {
             userId : id
         },
         include: [
-            {model: Category, as: 'category'}
+            {model: Category, as: 'category'},
+            {model: Price, as: 'price'}
         ]
     })
 
