@@ -8,7 +8,10 @@ const admin = async (req,res) => {
     const properties = await Property.findAll({
         where: {
             userId : id
-        }
+        },
+        include: [
+            {model: Category, as: 'category'}
+        ]
     })
 
     res.render('./properties/admin.pug',{
