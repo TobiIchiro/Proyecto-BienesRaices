@@ -15,5 +15,13 @@ Dropzone.options.image = {
     headers: {
         'CSRF-Token': token
     },
-    paramName: 'images'
+    paramName: 'images',
+    init: function(){
+        const dropzone = this
+        const btnPublish = document.querySelector('#publish')
+
+        btnPublish.addEventListener('click',function() {
+            dropzone.processQueue()
+        })
+    }
 }
