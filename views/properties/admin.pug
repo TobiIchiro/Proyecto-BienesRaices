@@ -9,7 +9,17 @@ block content
         a(href='/my-properties/add' class="rounded py-2 px-10 bg-gray-500 hover:bg-gray-600 text-white text-sm font-bold text-center uppercase") Publicar propiedad
 
         //pre= JSON.stringify(properties, undefined, 2)
-        if propiedades 
+        if properties
+            div(class= "bg-white shadow rounded-kg")
+                ul(class= "divide-y divide-gray-400")
+                    each property in properties 
+                        li 
+                            div(class= "p-6 w-full flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-8 gap-4")
+                                div(class= "sm:w-1/4 md:w-1/6")
+                                    img(src= `uploads/${property.imagen}`, alt=`Imagen propiedad ${property.title}`)
+                                div(class= "sm:w-2/4 md:w-3/6 lg:w-4/6") 2
+                                div(class= "sm:w-1/4 md:w-2/6 lg:w-1/6") 3
+                                
 
         else 
             p(class= "text-center") No hay propiedades
