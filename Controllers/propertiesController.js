@@ -144,6 +144,18 @@ const storeImage =  async (req, res, next) => {
 }
 
 const edit = async(req, res) => {
+    const {id} = req.params
+    //Validar que la propiedad exista
+    const property = await Property.findByPk(id)
+
+    if(!property){
+        return res.redirect('/my-properties')
+    }
+    
+    //Validar que la propiedad pertenece a quien visita la página
+    if(req.user.id.toString() !== property.userId.toString()){
+        return res.redirect('/my-properties')
+    }
     const [categories, prices] = await Promise.all([
         Category.findAll(),
         Price.findAll()
