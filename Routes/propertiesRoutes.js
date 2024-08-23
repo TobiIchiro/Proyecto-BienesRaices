@@ -37,8 +37,9 @@ router.post('/my-properties/add',protectRoute,
 router.get('/my-properties/add-image/:id',
     protectRoute,
     addImage)
+
 router.post('/my-properties/add-image/:id',
     protectRoute,
-    upload.array('images',5),
+    upload.single('images'),
     storeImage)
 export default router
