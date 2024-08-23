@@ -151,7 +151,7 @@ const edit = async(req, res) => {
     if(!property){
         return res.redirect('/my-properties')
     }
-    
+
     //Validar que la propiedad pertenece a quien visita la página
     if(req.user.id.toString() !== property.userId.toString()){
         return res.redirect('/my-properties')
@@ -166,7 +166,7 @@ const edit = async(req, res) => {
         csrfToken : req.csrfToken(),
         categories: categories,
         prices: prices,
-        datos: {}
+        datos: property
     })
 }
 
