@@ -162,12 +162,45 @@ const edit = async(req, res) => {
     ])
 
     res.render('./properties/edit.pug',{
-        pagina : 'Editar propiedad',
+        pagina : `Editar propiedad: ${property.title}`,
         csrfToken : req.csrfToken(),
         categories: categories,
         prices: prices,
         datos: property
     })
+}
+
+const saveChanges = async(req, res) => {
+
+    //Validacion de errores
+    let result = validationResult(req)
+    if(!result.isEmpty()) {
+        const [categories, prices] = await Promise.all([
+            Category.findAll(),
+            Price.findAll()
+        ])
+        return res.render('./properties/edit.pug',{
+            pagina : 'Editar propiedad',
+            csrfToken : req.csrfToken(),
+            categories: categories,
+            prices: prices,
+            errors: result.array(),
+            datos: req.body
+        })
+    }
+
+    const {id} = req.params
+    //Validar que la propiedad exista
+    const property = await Property.findByPk(id)
+
+    if(!property){
+        return res.redirect('/my-properties')
+    }
+
+    //Validar que la propiedad pertenece a quien visita la página
+    if(req.user.id.toString() !== property.userId.toString()){
+        return res.redirect('/my-properties')
+    }
 }
 
 export {
@@ -176,5 +209,6 @@ export {
     save,
     addImage,
     storeImage,
-    edit
+    edit,
+    saveChanges
 }
