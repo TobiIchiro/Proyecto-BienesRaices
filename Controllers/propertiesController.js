@@ -122,6 +122,7 @@ const storeImage =  async (req, res) => {
             
         });
         property.published = 1
+        property.save()
     }
     catch(error){
         console.log(error)
