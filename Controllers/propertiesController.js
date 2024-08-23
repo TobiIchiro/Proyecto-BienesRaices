@@ -141,9 +141,21 @@ const storeImage =  async (req, res, next) => {
     catch(error){
         console.log(error)
     }
-    
+}
 
+const edit = async(req, res) => {
+    const [categories, prices] = await Promise.all([
+        Category.findAll(),
+        Price.findAll()
+    ])
 
+    res.render('./properties/edit.pug',{
+        pagina : 'Editar propiedad',
+        csrfToken : req.csrfToken(),
+        categories: categories,
+        prices: prices,
+        datos: {}
+    })
 }
 
 export {
@@ -151,5 +163,6 @@ export {
     add,
     save,
     addImage,
-    storeImage
+    storeImage,
+    edit
 }

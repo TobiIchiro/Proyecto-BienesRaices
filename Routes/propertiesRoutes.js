@@ -6,7 +6,8 @@ import {
     add,
     save,
     addImage,
-    storeImage
+    storeImage,
+    edit
 } from '../Controllers/propertiesController.js'
 
 import protectRoute from '../middleware/protectRoute.js';
@@ -42,4 +43,9 @@ router.post('/my-properties/add-image/:id',
     protectRoute,
     upload.single('images'),
     storeImage)
+
+router.get('/my-properties/edit/:id',
+    protectRoute,
+    edit
+)
 export default router
