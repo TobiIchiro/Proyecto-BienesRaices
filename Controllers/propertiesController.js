@@ -96,9 +96,45 @@ const addImage = async (req, res) => {
     })
 }
 
+const storeImage =  async (req, res) => {
+    const {id} = req.params
+    //Validar que la propiedad exista
+    const property = await Property.findByPk(id)
+
+    if(!property){
+        return res.redirect('/my-properties')
+    }
+
+    //Validar que la propiedad no esté publicda
+    if(property.published){
+        return res.redirect('/my-properties')
+    }
+
+    //Validar que la propiedad pertenece a quien visita la página
+    if(req.user.id.toString() !== property.userId.toString()){
+        return res.redirect('/my-properties')
+    }
+    
+    try{
+        console.log(req.files)
+        req.files.forEach(file => {
+            property.imagen += (file.filename + ',')
+            
+        });
+        property.published = 1
+    }
+    catch(error){
+        console.log(error)
+    }
+    
+
+
+}
+
 export {
     admin,
     add,
     save,
-    addImage
+    addImage,
+    storeImage
 }

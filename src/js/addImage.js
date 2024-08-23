@@ -7,7 +7,7 @@ Dropzone.options.image = {
     acceptedFiles: '.png, .jpg, .jpeg',
     maxFilesize: 5,
     maxFiles: 5,
-    parallelUploads: 1,
+    parallelUploads: 5,
     autoProcessQueue: false,
     addRemoveLinks: true,
     dictRemoveFile: 'Borrar imagen',
