@@ -17,7 +17,8 @@ const admin = async (req,res) => {
 
     res.render('./properties/admin.pug',{
         pagina : 'Mis propiedades',
-        properties
+        properties,
+        csrfToken : req.csrfToken()
     })
 }
 
@@ -230,7 +231,20 @@ const saveChanges = async(req, res) => {
 }
 
 const deleteProperty = async (req, res) => {
+    const {id} = req.params
+    //Validar que la propiedad exista
+    const property = await Property.findByPk(id)
 
+    if(!property){
+        return res.redirect('/my-properties')
+    }
+
+    //Validar que la propiedad pertenece a quien visita la página
+    if(req.user.id.toString() !== property.userId.toString()){
+        return res.redirect('/my-properties')
+    }
+    
+    
 }
 
 export {

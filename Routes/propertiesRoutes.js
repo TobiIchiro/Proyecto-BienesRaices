@@ -64,7 +64,7 @@ router.post('/my-properties/edit/:id',
     body('lat').notEmpty().withMessage('Ubica la propiedad en el mapa'),
     saveChanges)
 
-router.post('/my-properies/delete/:id',
+router.post('/my-properties/delete/:id',
     protectRoute,
     deleteProperty
 )
