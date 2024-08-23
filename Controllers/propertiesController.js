@@ -179,6 +179,7 @@ const saveChanges = async(req, res) => {
             Category.findAll(),
             Price.findAll()
         ])
+        console.log(req.body)
         return res.render('./properties/edit.pug',{
             pagina : 'Editar propiedad',
             csrfToken : req.csrfToken(),
@@ -201,6 +202,35 @@ const saveChanges = async(req, res) => {
     if(req.user.id.toString() !== property.userId.toString()){
         return res.redirect('/my-properties')
     }
+
+    try {
+        const {title, description, rooms, parking, wc, street, lat, lng, price, category: categoryId} = req.body
+        
+        property.set({
+            title,
+            description,
+            rooms,
+            parking,
+            wc,
+            street,
+            lat,
+            lng,
+            priceId : price,
+            categoryId
+        })
+
+        await property.save();
+        res.redirect('/my-properties')
+
+
+    }
+    catch(error) {
+        console.log(error)
+    }
+}
+
+const deleteProperty = async (req, res) => {
+
 }
 
 export {
@@ -210,5 +240,6 @@ export {
     addImage,
     storeImage,
     edit,
-    saveChanges
+    saveChanges,
+    deleteProperty
 }

@@ -8,7 +8,8 @@ import {
     addImage,
     storeImage,
     edit,
-    saveChanges
+    saveChanges,
+    deleteProperty
 } from '../Controllers/propertiesController.js'
 
 import protectRoute from '../middleware/protectRoute.js';
@@ -62,4 +63,9 @@ router.post('/my-properties/edit/:id',
     body('wc').isNumeric().withMessage('Selecciona un numero de baños'),
     body('lat').notEmpty().withMessage('Ubica la propiedad en el mapa'),
     saveChanges)
+
+router.post('/my-properies/delete/:id',
+    protectRoute,
+    deleteProperty
+)
 export default router
