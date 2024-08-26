@@ -253,6 +253,25 @@ const deleteProperty = async (req, res) => {
     
 }
 
+const showProperty = async(req, res) => {
+    const {id} = req.params
+    const property = await Property.findByPk(id,{
+        include: [
+            {model: Category, as: 'category'},
+            {model: Price, as: 'price'}
+        ]
+    })
+
+    if(!property){
+        return res.redirect('/404')
+    }
+    res.render('properties/show.pug' ,{
+        property,
+        pagina: property.title
+
+    })
+}
+
 export {
     admin,
     add,
@@ -261,5 +280,6 @@ export {
     storeImage,
     edit,
     saveChanges,
-    deleteProperty
+    deleteProperty,
+    showProperty
 }

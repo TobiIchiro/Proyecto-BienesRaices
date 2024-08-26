@@ -9,7 +9,8 @@ import {
     storeImage,
     edit,
     saveChanges,
-    deleteProperty
+    deleteProperty,
+    showProperty
 } from '../Controllers/propertiesController.js'
 
 import protectRoute from '../middleware/protectRoute.js';
@@ -68,4 +69,7 @@ router.post('/my-properties/delete/:id',
     protectRoute,
     deleteProperty
 )
+
+router.get('/property/:id', showProperty)
+
 export default router
