@@ -4,23 +4,42 @@ import {Price, Category, Property} from '../models/index.js'
 
 const admin = async (req,res) => {
 
-    const {id} = req.user
+    const {pag} = req.query
 
-    const properties = await Property.findAll({
-        where: {
-            userId : id
-        },
-        include: [
-            {model: Category, as: 'category'},
-            {model: Price, as: 'price'}
-        ]
-    })
+    const expresion = /^[0-9]$/
 
-    res.render('./properties/admin.pug',{
-        pagina : 'Mis propiedades',
-        properties,
-        csrfToken : req.csrfToken()
-    })
+    if(!expresion.test(pag)) {
+        return res.redirect('/my-properties?pag=1')
+    }
+
+    try {
+        const {id} = req.user
+
+        const limit = 2
+        const offset = ((pag * limit) - limit)
+
+        const properties = await Property.findAll({
+            limit: limit,
+            offset,
+            where: {
+                userId : id
+            },
+            include: [
+                {model: Category, as: 'category'},
+                {model: Price, as: 'price'}
+            ]
+        })
+
+        res.render('./properties/admin.pug',{
+            pagina : 'Mis propiedades',
+            properties,
+            csrfToken : req.csrfToken()
+        })
+    } catch (error) {
+        
+    }
+
+    
 }
 
 const add = async (req, res) => {
