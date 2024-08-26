@@ -301,7 +301,8 @@ const showProperty = async(req, res) => {
     }
     res.render('properties/show.pug' ,{
         property,
-        pagina: property.title
+        pagina: property.title,
+        categories:  await Category.findAll()
 
     })
 }

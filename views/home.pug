@@ -4,5 +4,10 @@ block styles
     link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
 
 block content 
+    div(class= "py-5")
+        h1(class= "text-center text-4xl font-extrabold") Ubicaion en el mapa
+        div(id= "mapHome" class="h-[600px]")
 
 block scripts
+    script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
+    script(src="/js/mapHome.js")
