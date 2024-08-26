@@ -3,6 +3,10 @@ header(class= "bg-gray-500 p-4")
         h1(class= "text-2xl text-white font-extrabold text-center") Bienes
             span(class= "font-normal") Raices
         nav(class ="my-5 text-sm md:flex md:items-center md:gap-3 font-bold text-white hidden")
-            a(href="") Mis propiedades
-            a(href="") Mi perfil
-            a(class= "bg-gray-800 py-2 px-10 rounded-lg" href="") Cerrar sesión
+            a(class= "bg-gray-800 py-2 px-10 rounded-lg" href="/auth/signin") Crear cuenta
+            a(class= "bg-gray-800 py-2 px-10 rounded-lg" href="/auth/login") Inicar sesión
+        
+div(class="bg-gray-700 py-5 hidden lg:block")
+    div(class="container mx-auto flex justify-between")
+        each category in categories
+            a(href=`/categories/${category.id}` class= "text-sm font-bold uppercase text-white")= category.name+'s' 
