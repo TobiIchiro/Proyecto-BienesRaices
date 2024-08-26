@@ -44,7 +44,7 @@ const admin = async (req,res) => {
             properties,
             csrfToken : req.csrfToken(),
             pages: Math.ceil(total / limit),
-            pag,
+            pag: Number(pag),
             total,
             offset,
             limit
