@@ -1,10 +1,16 @@
-import {Category} from '../models/index.js' 
+import {Category, Price, Property} from '../models/index.js' 
 
 const home = async (req, res) => {
+
+    const [categories, prices] = await Promise.all([
+        Category.findAll(),
+        Price.findAll()
+    ])
      
     res.render('home.pug',{
         pagina: 'Inicio',
-        categories:  await Category.findAll()
+        categories,
+        prices
     })
 }
 
