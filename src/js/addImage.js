@@ -9,13 +9,14 @@ Dropzone.options.image = {
     maxFiles: 5,
     parallelUploads: 5,
     autoProcessQueue: false,
+    uploadMultiple: true,
     addRemoveLinks: true,
     dictRemoveFile: 'Borrar imagen',
     dictMaxFilesExceeded: 'Solo puedes agregar máximo 5 imágenes',
     headers: {
         'CSRF-Token': token
     },
-    paramName: 'images',
+    paramName: function() { return 'images'; },
     init: function(){
         const dropzone = this
         const btnPublish = document.querySelector('#publish')

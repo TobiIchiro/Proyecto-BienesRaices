@@ -116,14 +116,17 @@ const storeImage =  async (req, res, next) => {
     }
     
     try{
-        console.log(req.files)
-        //req.files.forEach(file => {
-        //    property.imagen += (file.filename + ',')
+        var imageString = ''
+        console.log(typeof req.files)
+        req.files.forEach(file => {
+            imageString += (file.filename + ',')
             
-        //});
-        //property.published = 1
-        //await property.save()
-        //next()
+        });
+        console.log(imageString)
+        property.imagen = imageString
+        property.published = 1
+        await property.save()
+        next()
     }
     catch(error){
         console.log(error)
