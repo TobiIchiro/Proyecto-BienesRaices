@@ -1,12 +1,13 @@
 import {unlink} from 'node:fs/promises'
 import {validationResult} from 'express-validator'
 import {Price, Category, Property} from '../models/index.js'
+import { Console } from 'node:console'
 
 const admin = async (req,res) => {
 
     const {pag} = req.query
 
-    const expresion = /^[0-9]$/
+    const expresion = /^[0-9]+$/
 
     if(!expresion.test(pag)) {
         return res.redirect('/my-properties?pag=1')
@@ -15,7 +16,7 @@ const admin = async (req,res) => {
     try {
         const {id} = req.user
 
-        const limit = 2
+        const limit = 5
         const offset = ((pag * limit) - limit)
 
         const [properties, total] = await Promise.all([
@@ -36,6 +37,15 @@ const admin = async (req,res) => {
                 }
             })
         ])
+
+        if(pag < 1)
+        {
+            return res.redirect('/my-properties?pag=1')
+        }
+        else if(pag > Math.ceil(total / limit))
+        {
+            return res.redirect(`/my-properties?pag=${Math.ceil(total / limit)}`)
+        }
 
 
 
