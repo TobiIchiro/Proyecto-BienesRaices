@@ -76,8 +76,13 @@ const category = async (req, res) => {
     //Obtener las propiedades de la categoría
 }
 
-const notFound = (req, res) => {
-
+const notFound = async (req, res) => {
+    const categories= await Category.findAll()
+    console.log(categories)
+    res.render('404.pug', {
+        pagina: 'No encontrada',
+        categories
+    })
 }
 
 const searcher = (req,res) => {
