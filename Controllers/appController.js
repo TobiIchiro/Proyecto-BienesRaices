@@ -1,3 +1,4 @@
+import { where } from 'sequelize'
 import {Category, Price, Property} from '../models/index.js' 
 
 const home = async (req, res) => {
@@ -46,8 +47,33 @@ const home = async (req, res) => {
     })
 }
 
-const category = (req, res) => {
+const category = async (req, res) => {
+    const {id} = req.params
 
+    //Comprobar que la categoría exista
+    const categories = await Category.findAll()
+    const category = await Category.findByPk(id)
+    if(!category){
+        return res.redirect('/404')
+    }
+
+    const properties = await Property.findAll({
+        where: {
+            categoryId: id,
+            published : 1
+        },
+        include: [{
+            model: Price,
+            as: 'price' 
+        }]
+    })
+    res.render('category.pug',{
+        pagina: category.name+'s',
+        properties,
+        categories
+    })
+
+    //Obtener las propiedades de la categoría
 }
 
 const notFound = (req, res) => {
