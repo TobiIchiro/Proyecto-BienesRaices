@@ -3,6 +3,8 @@ import csrf from 'csurf'
 import cookieParser from 'cookie-parser'
 import userRoutes from './Routes/userRoutes.js'
 import propertiesRoutes from './Routes/propertiesRoutes.js'
+import appRoutes from './Routes/appRoutes.js'
+import apiRoutes from './Routes/apiRoutes.js'
 import db from './config/db.js'
 //Crear la app
 const app = express()
@@ -40,6 +42,8 @@ app.use(express.static('public'))
 // use busca todas las rutas
 app.use('/auth',userRoutes)
 app.use('/',propertiesRoutes)
+app.use('/',appRoutes)
+app.use('/api',apiRoutes)
 
 
 
