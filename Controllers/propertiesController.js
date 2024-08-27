@@ -116,12 +116,8 @@ const storeImage =  async (req, res, next) => {
     }
     
     try{
-        var imageString = ''
-        console.log(typeof req.files)
-        req.files.forEach(file => {
-            imageString += (file.filename + ',')
-            
-        });
+
+        const imageString = req.files.map(file => file.filename).join(',')
         console.log(imageString)
         property.imagen = imageString
         property.published = 1
