@@ -2,15 +2,47 @@ import {Category, Price, Property} from '../models/index.js'
 
 const home = async (req, res) => {
 
-    const [categories, prices] = await Promise.all([
+    const [categories, prices, casas, departamentos] = await Promise.all([
         Category.findAll(),
-        Price.findAll()
+        Price.findAll(),
+        Property.findAll({
+            limit : 5,
+            where : {
+                categoryId : 1,
+                published: 1
+            },
+            include : [
+                {
+                model: Price,
+                as: 'price'
+            }],
+            order : [
+                ['createdAt','DESC']
+            ]
+        }),
+        Property.findAll({
+            limit : 5,
+            where : {
+                categoryId : 2,
+                published: 1
+            },
+            include : [
+                {
+                model: Price,
+                as: 'price'
+            }],
+            order : [
+                ['createdAt','DESC']
+            ]
+        })
     ])
      
     res.render('home.pug',{
         pagina: 'Inicio',
         categories,
-        prices
+        prices,
+        casas,
+        departamentos
     })
 }
 

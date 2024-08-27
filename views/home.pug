@@ -22,6 +22,40 @@ block content
                         option(value=price.id)= price.name
         div(id= "mapHome" class="h-[600px]")
 
+        section(class= "py-5")
+            h2(class= "text-center text-4xl font-extrabold pt-10") Casas en venta
+
+            div(class= "grid grid-cols-1 md:grid-cols-3 gap-5 mt.5")
+                each casa in casas
+                    div(class= "bg-white shadow rounded-lg")
+                        img(class= "object-cover h-72 w-full" src=`/uploads/${casa.imagen}`, alt=`Imagen de casa ${casa.title}`)
+                        div(class= "p-5 space-y-2")
+                            h3(class= "text-2xl font-bold")= casa.title
+                            p(class= "text-sm text-gray-600") Habitaciones: 
+                                span(class= "text-gray-800 font-bold")= casa.rooms
+                            p(class= "text-sm text-gray-600") Baños: 
+                                span(class= "text-gray-800 font-bold")= casa.wc
+                            p(class= "text-sm text-gray-600") Precio: 
+                                span(class= "text-gray-800 font-bold")= casa.price.name
+                            a(href=`/property/${casa.id}` class= "bg-gray-600 w-full text-center block font-bold text-white p2 uppercase rounded") Ver propiedad
+        section(class= "py-5")
+            h2(class= "text-center text-4xl font-extrabold pt-10") Departamentos en venta
+
+            div(class= "grid grid-cols-1 md:grid-cols-3 gap-5 mt.5")
+                each departamento in departamentos
+                    div(class= "bg-white shadow rounded-lg")
+                        img(class= "object-cover h-72 w-full" src=`/uploads/${departamento.imagen}`, alt=`Imagen de casa ${departamento.title}`)
+                        div(class= "p-5 space-y-2")
+                            h3(class= "text-2xl font-bold")= departamento.title
+                            p(class= "text-sm text-gray-600") Habitaciones: 
+                                span(class= "text-gray-800 font-bold")= departamento.rooms
+                            p(class= "text-sm text-gray-600") Baños: 
+                                span(class= "text-gray-800 font-bold")= departamento.wc
+                            p(class= "text-sm text-gray-600") Precio: 
+                                span(class= "text-gray-800 font-bold")= departamento.price.name
+                            a(href=`/property/${departamento.id}` class= "bg-gray-600 w-full text-center block font-bold text-white p2 uppercase rounded") Ver propiedad
+                                    
+
 block scripts
     script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
     script(src="/js/mapHome.js")
