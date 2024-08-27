@@ -302,7 +302,8 @@ const showProperty = async(req, res) => {
     res.render('properties/show.pug' ,{
         property,
         pagina: property.title,
-        categories:  await Category.findAll()
+        categories:  await Category.findAll(),
+        csrfToken: req.csrfToken()
 
     })
 }

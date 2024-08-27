@@ -1,5 +1,6 @@
-import { where } from 'sequelize'
+import { Sequelize } from 'sequelize'
 import {Category, Price, Property} from '../models/index.js' 
+import { title } from 'node:process'
 
 const home = async (req, res) => {
 
@@ -43,7 +44,8 @@ const home = async (req, res) => {
         categories,
         prices,
         casas,
-        departamentos
+        departamentos,
+        csrfToken: req.csrfToken()
     })
 }
 
@@ -70,7 +72,8 @@ const category = async (req, res) => {
     res.render('category.pug',{
         pagina: category.name+'s',
         properties,
-        categories
+        categories,
+        csrfToken: req.csrfToken()
     })
 
     //Obtener las propiedades de la categoría
@@ -78,15 +81,41 @@ const category = async (req, res) => {
 
 const notFound = async (req, res) => {
     const categories= await Category.findAll()
-    console.log(categories)
     res.render('404.pug', {
         pagina: 'No encontrada',
-        categories
+        categories,
+        csrfToken: req.csrfToken()
     })
 }
 
-const searcher = (req,res) => {
+const searcher = async (req,res) => {
+    const {termino} = req.body
+    if(!termino.trim()){
+        res.redirect('back')
+    }
 
+    // consultar las propiedades
+    const properties = await Property.findAll({
+        where: {
+            title: {
+                [Sequelize.Op.like] : '%' + termino + '%'
+            },
+            published: 1
+        },
+        include: [
+            {
+                model: Price, as: 'price'
+            }
+        ]
+    })
+    const categories= await Category.findAll()
+    res.render('search.pug', {
+        pagina: 'Resultados de búsqueda',
+        properties,
+        categories,
+        csrfToken: req.csrfToken()
+
+    })
 }
 
 export {

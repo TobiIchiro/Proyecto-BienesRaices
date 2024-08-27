@@ -9,5 +9,12 @@ header(class= "bg-gray-500 p-4")
         
 div(class="bg-gray-700 py-5 hidden lg:block")
     div(class="container mx-auto flex justify-between")
-        each category in categories
-            a(href=`/categories/${category.id}` class= "text-sm font-bold uppercase text-white")= category.name+'s' 
+        nav(class= "flex gap-4 items-center")
+            each category in categories
+                a(href=`/categories/${category.id}` class= "text-sm font-bold uppercase text-white")= category.name+'s'
+        form(action= "/searcher" method= "POST" class= "flex gap-3 items-center")
+            input(type="hidden" name= "_csrf" value= csrfToken)
+            lable(for= "termino" class= "text-sm uppercase font-bold text-white") Búsqueda
+            input(type= "text" id= "termino" name= "termino" placeholder= "Buscar propiedads" class= "py-2 rounded-lg shadow text-sm")
+
+            input(type= "submit" class= "bg-gray-800 hover:bg-gray-400 rounded-lg text-white uppercase font-bold p-2 cursor-pointer text-sm" value="Buscar")
