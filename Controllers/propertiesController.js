@@ -303,7 +303,8 @@ const showProperty = async(req, res) => {
         property,
         pagina: property.title,
         categories:  await Category.findAll(),
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        user: req.user
 
     })
 }

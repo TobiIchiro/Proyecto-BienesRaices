@@ -12,7 +12,7 @@ import {
     deleteProperty,
     showProperty
 } from '../Controllers/propertiesController.js'
-
+import {identifyUser} from '../middleware/identifyUser.js'
 import protectRoute from '../middleware/protectRoute.js';
 import upload from '../middleware/uploadImage.js'
 
@@ -70,6 +70,8 @@ router.post('/my-properties/delete/:id',
     deleteProperty
 )
 
-router.get('/property/:id', showProperty)
+router.get('/property/:id',
+    identifyUser,
+    showProperty)
 
 export default router
