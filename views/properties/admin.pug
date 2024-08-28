@@ -8,7 +8,6 @@ block content
 
         a(href='/my-properties/add' class="rounded py-2 px-10 bg-gray-500 hover:bg-gray-600 text-white text-sm font-bold text-center uppercase") Publicar propiedad
 
-        //pre= JSON.stringify(properties, undefined, 2)
         if properties
             div(class= "bg-white shadow rounded-kg")
                 ul(class= "divide-y divide-gray-400")
@@ -31,8 +30,7 @@ block content
 
                                     
                                 div(class= "sm:w-1/4 md:w-2/6 lg:flex-1 flex flex-col lg:flex-row gap-2")
-                                    form(action='#')
-                                        input(type="submit" class= `w-full px-2 py-2 md:py-1 text-xs leading-5 font-semibold rounded-md cursor-pointer ${property.published ? 'bg-green-100 text-gray-800' : 'bg-yellow-100 text-gray-800'}` value= `${property.published ? 'Publicada': 'No publicada'}`)
+                                    button(type="button" data-property-id= `${property.id}` class= `change-state w-full px-2 py-2 md:py-1 text-xs leading-5 font-semibold rounded-md cursor-pointer ${property.published ? 'bg-green-100 text-gray-800' : 'bg-yellow-100 text-gray-800'}`)= `${property.published ? 'Publicada': 'No publicada'}`
                                     a(href= `/my-properties/edit/${property.id}` class= "w-full px-2 py-2 md:py-1 text-xs leading-5 font-semibold rounded-md cursor-pointer bg-gray-100 text-gray-800 text-center") Editar
 
                                     form(method= "POST" action=`/my-properties/delete/${property.id}`)
@@ -56,3 +54,6 @@ block content
                                     a(href= `my-properties?pag=${n}` class= `${pag == n ? 'bg-gray-50 border-gray-500 text-gray-800' : 'bg-white text-gray-500 hover:bg-gray-50' } relative inline-flex items-center px-4 py-2 border text-sm font-medium`) #{n++}
         else 
             p(class= "text-center") No hay propiedades
+
+block scripts
+    script(src='/js/changeState.js')
