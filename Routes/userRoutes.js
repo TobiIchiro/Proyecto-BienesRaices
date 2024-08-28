@@ -1,6 +1,7 @@
 import express from 'express';
 import { formularioLogin,
-         autenticateLogin, 
+         autenticateLogin,
+         logOut, 
          formularioSignin,
          signin,
          verify,
@@ -14,6 +15,8 @@ const router = express.Router();
 
 router.get('/login', formularioLogin)
 router.post('/login',autenticateLogin)
+
+router.post('/logout',logOut)
 
 router.get('/signin', formularioSignin)
 router.post('/signin', signin)
