@@ -1,7 +1,7 @@
 import {unlink} from 'node:fs/promises'
 import {validationResult} from 'express-validator'
-import {Price, Category, Property, Message} from '../models/index.js'
-import {isSeller} from '../helpers/index.js'
+import {Price, Category, Property, Message, Usuario} from '../models/index.js'
+import {isSeller, formatDate} from '../helpers/index.js'
 
 const admin = async (req,res) => {
 
@@ -28,7 +28,9 @@ const admin = async (req,res) => {
                 },
                 include: [
                     {model: Category, as: 'category'},
-                    {model: Price, as: 'price'}
+                    {model: Price, as: 'price'},
+                    {model: Message, as: 'messages'}
+
                 ]
             }),
             Property.count({
@@ -379,6 +381,36 @@ const sendMessage = async (req,res) => {
     })
 }
 
+//Leer mensajes resibido
+const showMessages = async (req,res) => {
+    const {id} = req.params
+    //Validar que la propiedad exista
+    const property = await Property.findByPk(id,{
+        include : [
+            {model: Message, as: 'messages',
+                include : [
+                    {model: Usuario.scope('deletePassword'), as: 'user'}
+                ]
+            }
+        ]
+    })
+
+    if(!property){
+        return res.redirect('/my-properties')
+    }
+
+    //Validar que la propiedad pertenece a quien visita la página
+    if(req.user.id.toString() !== property.userId.toString()){
+        return res.redirect('/my-properties')
+    }
+
+    res.render('properties/messages.pug',{
+        pagina: 'Mis mensajes',
+        messages: property.messages,
+        formatDate
+    })
+}
+
 export {
     admin,
     add,
@@ -389,5 +421,6 @@ export {
     saveChanges,
     deleteProperty,
     showProperty,
-    sendMessage
+    sendMessage,
+    showMessages
 }

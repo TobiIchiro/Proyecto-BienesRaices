@@ -8,9 +8,11 @@ import Message  from './Message.js'
 Property.belongsTo(Price)
 Property.belongsTo(Category)
 Property.belongsTo(Usuario)
+Property.hasMany(Message, {foreignKey: 'propertyId'})
 
 Message.belongsTo(Property, { foreignKey : 'propertyId'})
 Message.belongsTo(Usuario, { foreignKey : 'userId'})
+
 
 export {
     Property,
