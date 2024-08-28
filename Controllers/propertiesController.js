@@ -1,7 +1,7 @@
 import {unlink} from 'node:fs/promises'
 import {validationResult} from 'express-validator'
-import {Price, Category, Property} from '../models/index.js'
-import { Console } from 'node:console'
+import {Price, Category, Property, Message} from '../models/index.js'
+import {isSeller} from '../helpers/index.js'
 
 const admin = async (req,res) => {
 
@@ -312,13 +312,70 @@ const showProperty = async(req, res) => {
     if(!property){
         return res.redirect('/404')
     }
+
+
     res.render('properties/show.pug' ,{
         property,
         pagina: property.title,
         categories:  await Category.findAll(),
         csrfToken: req.csrfToken(),
-        user: req.user
+        user: req.user,
+        isSeller: isSeller(req.user?.id, property.userId)
 
+    })
+}
+
+const sendMessage = async (req,res) => {
+    const {id} = req.params
+    const property = await Property.findByPk(id,{
+        include: [
+            {model: Category, as: 'category'},
+            {model: Price, as: 'price'}
+        ]
+    })
+
+    if(!property){
+        return res.redirect('/404')
+    }
+
+    //Renderizar los errores
+    let result = validationResult(req)
+    console.log(result)
+
+    //Vereficar que el resultado este vacio
+    if(!result.isEmpty())
+    {
+        console.log('Not emptty')
+        return res.render('properties/show.pug', {
+            property,
+            pagina: property.title,
+            categories:  await Category.findAll(),
+            csrfToken: req.csrfToken(),
+            user: req.user,
+            isSeller: isSeller(req.user?.id, property.userId),
+            errors: result.array()
+            }
+        )
+    }
+
+    const message = req.body.mensaje.toString() + ' mi correo es: ' + req.user.email.toString()
+    const { id: propertyId} = req.params
+    const {id : userId} = req.user
+
+    await Message.create({
+        message,
+        propertyId,
+        userId
+    })
+
+    res.render('properties/show.pug' ,{
+        property,
+        pagina: property.title,
+        categories:  await Category.findAll(),
+        csrfToken: req.csrfToken(),
+        user: req.user,
+        isSeller: isSeller(req.user?.id, property.userId),
+        sended: true
     })
 }
 
@@ -331,5 +388,6 @@ export {
     edit,
     saveChanges,
     deleteProperty,
-    showProperty
+    showProperty,
+    sendMessage
 }

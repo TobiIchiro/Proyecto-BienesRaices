@@ -10,7 +10,8 @@ import {
     edit,
     saveChanges,
     deleteProperty,
-    showProperty
+    showProperty,
+    sendMessage
 } from '../Controllers/propertiesController.js'
 import {identifyUser} from '../middleware/identifyUser.js'
 import protectRoute from '../middleware/protectRoute.js';
@@ -74,4 +75,9 @@ router.get('/property/:id',
     identifyUser,
     showProperty)
 
+router.post('/property/:id',
+    identifyUser,
+    body('mensaje').isLength({min: 15}).withMessage('El mensaje no puede ir vació o es muy corto'),
+    sendMessage
+)
 export default router
