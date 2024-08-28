@@ -334,7 +334,7 @@ const showProperty = async(req, res) => {
         ]
     })
 
-    if(!property){
+    if(!property || (!property.published && (req.user.id.toString() !== property.userId.toString()))){
         return res.redirect('/404')
     }
 
