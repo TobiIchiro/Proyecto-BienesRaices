@@ -10,6 +10,7 @@ import {
     edit,
     saveChanges,
     deleteProperty,
+    changeState,
     showProperty,
     sendMessage,
     showMessages
@@ -71,6 +72,10 @@ router.post('/my-properties/delete/:id',
     protectRoute,
     deleteProperty
 )
+
+router.put('/property/:id',
+    protectRoute,
+    changeState)
 
 router.get('/property/:id',
     identifyUser,

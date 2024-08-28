@@ -302,6 +302,29 @@ const deleteProperty = async (req, res) => {
     
 }
 
+//Modificar el estado de la propiedad
+const changeState = async(req, res) => {
+    const {id} = req.params
+    //Validar que la propiedad exista
+    const property = await Property.findByPk(id)
+
+    if(!property){
+        return res.redirect('/my-properties')
+    }
+
+    //Validar que la propiedad pertenece a quien visita la página
+    if(req.user.id.toString() !== property.userId.toString()){
+        return res.redirect('/my-properties')
+    }
+
+    property.published = !property.published
+
+    await property.save()
+    res.json({
+        result: true
+    })
+}
+
 const showProperty = async(req, res) => {
     const {id} = req.params
     const property = await Property.findByPk(id,{
@@ -420,6 +443,7 @@ export {
     edit,
     saveChanges,
     deleteProperty,
+    changeState,
     showProperty,
     sendMessage,
     showMessages
