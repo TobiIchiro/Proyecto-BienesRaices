@@ -7,7 +7,9 @@ export default {
         addImage: './src/js/addImage.js',
         showMap: './src/js/showMap.js',
         mapHome: './src/js/mapHome.js',
-        changeState: './src/js/changeState.js'
+        changeState: './src/js/changeState.js',
+        hamburgerMenu: './src/js/hamburgerMenu.js',
+        categoryrMenu: './src/js/categoryMenu.js'
     },
     output: {
         filename: '[name].js',

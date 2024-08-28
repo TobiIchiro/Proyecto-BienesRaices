@@ -18,3 +18,29 @@ div(class="bg-gray-700 py-5 hidden lg:block")
             input(type= "text" id= "termino" name= "termino" placeholder= "Buscar propiedads" class= "py-2 rounded-lg shadow text-sm")
 
             input(type= "submit" class= "bg-gray-800 hover:bg-gray-400 rounded-lg text-white uppercase font-bold p-2 cursor-pointer text-sm" value="Buscar")
+
+div(class="bg-gray-700 py-5 md:hidden lg:hidden")
+    div(class="container mx-auto flex justify-between text-white")
+        button(type="button" class= "hamburger ml-3")
+            svg(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6")
+                path(fill-rule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd")
+            nav(class= "hidden options text-left text-sm font-bold uppercase text-white w-full")
+                ul(class= "mt-4")
+                    li
+                        a(class= "bg-gray-800 py-2 px-2 rounded-lg" href="/auth/signin") Crear cuenta
+                ul(class= "mt-4")
+                    li
+                        a(class= "bg-gray-800 py-2 px-2 rounded-lg" href="/auth/login") Inicar sesión
+                nav(class = "categories")
+                    each category in categories
+                        ul(class= "mt-2")
+                            li
+                                a(href=`/categories/${category.id}`)= category.name+'s'
+                                
+                    
+        form(action= "/searcher" method= "POST" class= "flex gap-3 items-center")
+            input(type="hidden" name= "_csrf" value= csrfToken)
+            lable(for= "termino" class= "text-sm uppercase font-bold text-white") Búsqueda
+            input(type= "text" id= "termino" name= "termino" placeholder= "Buscar propiedads" class= "py-2 rounded-lg shadow text-sm")
+
+            input(type= "submit" class= "bg-gray-800 hover:bg-gray-400 rounded-lg text-white uppercase font-bold p-2 cursor-pointer text-sm" value="Buscar")
